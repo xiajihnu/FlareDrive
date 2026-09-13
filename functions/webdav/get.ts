@@ -16,6 +16,12 @@ export async function handleRequestGet({
 
   const headers = new Headers();
   obj.writeHttpMetadata(headers);
+  
+  // 🌟 核心修复：如果是 .txt 结尾的文件，强行追加 UTF-8 编码声明
+  if (path.toLowerCase().endsWith(".txt")) {
+    headers.set("Content-Type", "text/plain; charset=utf-8");
+  }
+
   if (path.startsWith("_$flaredrive$/thumbnails/"))
     headers.set("Cache-Control", "max-age=31536000");
   return new Response(obj.body, { headers });
